@@ -29,6 +29,10 @@
     display: none;
 }
 
+.addRecord {
+    display: none;
+}
+
 h1 {
     font-size: 2.5rem;
 }

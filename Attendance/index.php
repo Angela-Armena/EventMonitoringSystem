@@ -1,6 +1,35 @@
 <?php
 
-if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+if ($_SERVER['REQUEST_METHOD'] == 'scan') {
+    include 'connect.php';
+    $serialNumber = $_POST['RFIDSerialNumber'];
+
+    $query = "SELECT FirstName, LastName, StudentNumber FROM students WHERE RFIDSerialNumber = '$serialNumber'";
+    $result = mysqli_query($conn, $query);
+    
+    if($result)
+    {
+        if(mysqli_num_rows($result) > 0)
+        {
+            $showScanSuccess = true;
+            $row = mysqli_fetch_assoc($result);
+
+            $name = $row['FirstName'] .' ' .$row['LastName'];
+            $studentNumber = $row['StudentNumber'];
+        }
+        else
+        {
+            $showNoRecord = true;
+        }
+    }
+    else    
+    {
+        echo('query not successful');
+        $showScanFailed = true;
+    }
+}
+
+if ($_SERVER['REQUEST_METHOD'] == 'addInformation') {
     include 'connect.php';
     $serialNumber = $_POST['RFIDSerialNumber'];
 
@@ -61,7 +90,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 <body>
     <div class="container">
         <h1>Attendance Monitoring</h1>
-        <form method="post" class="formContainer">
+        <form method="scan" class="formContainer">
             <input type="text" id="serialNumber" name="RFIDSerialNumber">
             <button type="submit" class="btn buttonScan">Scan</button>
         </form>
@@ -92,6 +121,21 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         <p class="cardResult" id="name">Scan failed. Please try again.</p>
     </div>
 
+    <div id="addRecord">
+        <form method="addInformation">
+            <h1 class="cardTitle">Add Student Information</h1>
+            <p class="cardResult">Student Number</p>
+            <input type="text" id="studentNumber" name="studentNumber">
+            <p class="cardResult">First Name</p>
+            <input type="text" id="nameFirst" name="nameFirst">
+            <p class="cardResult">Last Name</p>
+            <input type="text" id="nameLast" name="nameLast">
+            <p class="cardResult">Email Address</p>
+            <input type="text" id="emailAddress" name="emailAddress">
+            <button class="btn buttonRecord" id="addToDatabaseButton">Add to Database</button>
+        </form>
+    </div>
+
 
     <!-- THIS IS OPTIONAL AS IT IS JUST A WARNING THAT THE NFC READER IS NOT MEANT TO BE USED ON CURRENT CHROME VERSION -->
     <!-- <script>
@@ -113,6 +157,17 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         if (!("NDEFReader" in window))
             ChromeSamples.setStatus("Web NFC is not available. Use Chrome on Android.");
     </script> -->
+
+    <script>
+        document.getElementById('addRecordButton').addEventListener('click', function() {
+            var addRecordDiv = document.getElementById('addRecord');
+
+            if (addRecordDiv.style.display === 'none' || addRecordDiv.style.display === '')
+                addRecordDiv.style.display = 'block';
+            else
+                addRecordDiv.style.display = 'none';
+        })
+    </script>
 </body>
 
 </html>
