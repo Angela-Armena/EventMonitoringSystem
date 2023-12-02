@@ -1,0 +1,77 @@
+html, body {
+    margin: 0;
+    padding: 0;
+    font-family: 'Lato', sans-serif;
+}
+
+.mainContainer {
+    margin: 5.5rem auto 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+}
+
+#calendar {
+    margin-top: 10px;
+}
+
+/* Style FullCalendar header */
+.mainContainer button:hover {
+    background-color: #357ac7; /* Set button hover background color */
+}
+.mainContainer button {
+    background-color: #4285f4; /* Set button background color */
+    margin: 1rem;
+    border: none;
+    width: 5rem;
+    height: 3.5rem;
+    border: 2px solid #36454F;
+    color: #36454F;
+    font-size: 0.8rem;
+    letter-spacing: 2px;
+    cursor: pointer;
+    transition: all .3s ease;
+}
+
+
+
+/* HAMBURGER MENU DESIGNS */
+.menuHamburger {
+    position: absolute;
+    top: 0;
+    width: 100%;
+    overflow: hidden;
+}
+#myLinks {
+    display: none;
+    position: relative;
+    z-index: 100;
+    background-color: #224c8a;
+}
+a {
+    color: white;
+    padding: 14px 16px;
+    text-decoration: none;
+    font-size: 17px;
+    display: block;
+}
+a.menuIcon {
+    width: 100%;
+    background: #224c8a;
+    display: block;
+    position: absolute;
+    left: 0;
+    top: 0;
+}
+.menuButton:hover, .menuLink:hover {
+    color: #A7C7E7;
+    cursor: pointer;
+}
+
+.menuLink:hover{
+    background-color: #A7C7E7;
+    color: #224c8a;
+    text-decoration: none;
+}
