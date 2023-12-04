@@ -21,9 +21,6 @@
     </script>
 
     <?php
-    header("Content-Type: text/css");
-    readfile("path_to_your_css_file/style.css");
-
     session_start();
     $showVerifyModal = false;
     $sendVerification = false;
