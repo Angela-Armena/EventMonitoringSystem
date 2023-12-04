@@ -14,7 +14,7 @@
     
     @media screen and (min-width: 832px) {
     body {
-        width: 500px;
+        width: 800px;
         margin: 0 auto;
     }
     }
