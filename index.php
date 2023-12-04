@@ -2,7 +2,7 @@
 <html lang="en">
 
 <head>
-    <title>Web NFC Sample</title>
+    <title>EMS Attendance Scanner</title>
     <link rel="stylesheet" href="attendance.css">
 </head>
 <style>
@@ -14,7 +14,6 @@
     
     @media screen and (min-width: 832px) {
     body {
-        width: 800px;
         margin: 0 auto;
     }
     }
@@ -77,7 +76,7 @@
 
 <body>
 
-    <h1>Web NFC Sample</h1>
+    <h1>EMS Attendance Scanner</h1>
     <br><br>
 
     <button id="scanButton">Scan</button>
