@@ -130,6 +130,7 @@
     <!-- STARTS SCAN WHEN BUTTON IS CLICKED -->
     <script>
         let scanning = false;
+        let scanTimeout;
 
         scanButton.addEventListener("click", async () => {
             if (scanning) return; // Prevent multiple scans
@@ -139,7 +140,7 @@
 
             try {
                 const ndef = new NDEFReader();
-                let scanTimeout = setTimeout(() => {
+                scanTimeout = setTimeout(() => {
                     if (scanning) {
                         log("Nothing has been scanned. Please try again.");
                         stopScan();
@@ -156,7 +157,6 @@
 
                 ndef.addEventListener("reading", ({ message, serialNumber }) => {
                     log(`> Serial Number: ${serialNumber}`);
-                    // log(`> Records: (${message.records.length})`);
 
                     fetch('test.php', {
                         method: 'POST',
