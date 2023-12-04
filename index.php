@@ -78,7 +78,7 @@
 <body>
 
     <h1>Web NFC Sample</h1>
-    <br><br><br><br><br>
+    <br><br>
 
     <button id="scanButton">Scan</button>
 
