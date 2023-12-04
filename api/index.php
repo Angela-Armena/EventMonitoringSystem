@@ -162,7 +162,6 @@
                     ndef.addEventListener("reading", ({ message, serialNumber }) => {
                         log(`> Serial Number: ${serialNumber}`);
 
-<<<<<<< HEAD
                         fetch('test.php', {
                             method: 'POST',
                             headers: {
@@ -192,11 +191,9 @@
         // To stop the await operation at a certain point
         function stopAwaitOperation() {
             isStopped = true;
-=======
         function stopScan() {
             scanning = false;
             clearTimeout(scanTimeout);
->>>>>>> parent of 064f0c5 (2)
         }
     </script>
 
