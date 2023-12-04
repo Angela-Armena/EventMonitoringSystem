@@ -129,71 +129,58 @@
 
     <!-- STARTS SCAN WHEN BUTTON IS CLICKED -->
     <script>
-        let isStopped = false;
+        let scanning = false;
         let scanTimeout;
 
         scanButton.addEventListener("click", async () => {
-            log("Scanning for ID...");
+            if (scanning) return; // Prevent multiple scans
             
-            while (!isStopped) {
-                try {
-                    onst ndef = new NDEFReader();
-                    scanTimeout = setTimeout(() => {
-                        if (scanning) {
-                            log("Nothing has been scanned. Please try again.");
-                            // Check if operation should stop
-                            if (isStopped) {
-                                break; // Exit the loop
-                            }
-                        }
-                    }, 5000); // 5 seconds timeout
+            log("Scanning for ID...");
+            scanning = true;
 
-                    await ndef.scan();
-                    log("> Scan started");
-
-                    ndef.addEventListener("readingerror", () => {
-                        log("Cannot read data from the NFC tag. Please try again.");
-                        // Check if operation should stop
-                        if (isStopped) {
-                            break; // Exit the loop
-                        }
-                    });
-
-                    ndef.addEventListener("reading", ({ message, serialNumber }) => {
-                        log(`> Serial Number: ${serialNumber}`);
-
-                        fetch('test.php', {
-                            method: 'POST',
-                            headers: {
-                                'Content-Type': 'application/json',
-                            },
-                            body: JSON.stringify({ serialNumber: serialNumber }),
-                        })
-                        .catch(error => {
-                            console.error('Error: ', error);
-                        });
-
-                        // Check if operation should stop
-                        if (isStopped) {
-                            break; // Exit the loop
-                        }
-                    });
-                } catch (error) {
-                    log("Argh! " + error);
-                    // Check if operation should stop
-                    if (isStopped) {
-                        break; // Exit the loop
+            try {
+                const ndef = new NDEFReader();
+                scanTimeout = setTimeout(() => {
+                    if (scanning) {
+                        log("Nothing has been scanned. Please try again.");
+                        stopScan();
                     }
-                }
-            }
-        })
+                }, 5000); // 5 seconds timeout
 
-        // To stop the await operation at a certain point
-        function stopAwaitOperation() {
-            isStopped = true;
+                await ndef.scan();
+                log("> Scan started");
+
+                ndef.addEventListener("readingerror", () => {
+                    log("Cannot read data from the NFC tag. Please try again.");
+                    stopScan();
+                });
+
+                ndef.addEventListener("reading", ({ message, serialNumber }) => {
+                    log(`> Serial Number: ${serialNumber}`);
+
+                    fetch('test.php', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({ serialNumber: serialNumber }),
+                    })
+                    .catch(error => {
+                        console.error('Error: ', error);
+                    });
+
+                    stopScan();
+                });
+            } catch (error) {
+                log("Argh! " + error);
+                stopScan();
+            }
+        });
+
         function stopScan() {
             scanning = false;
             clearTimeout(scanTimeout);
+            ndef.stop();
         }
     </script>
 
