@@ -2,7 +2,7 @@
 <html lang="en">
 
 <head>
-    <title>EMS Attendance Scanner</title>
+    <title>Web NFC Sample</title>
     <link rel="stylesheet" href="attendance.css">
 </head>
 <style>
@@ -14,7 +14,7 @@
     
     @media screen and (min-width: 832px) {
     body {
-        width: 100%;
+        width: 800px;
         margin: 0 auto;
     }
     }
@@ -77,7 +77,7 @@
 
 <body>
 
-    <h1>EMS Attendance Scanner</h1>
+    <h1>Web NFC Sample</h1>
     <br><br><br><br><br>
 
     <button id="scanButton">Scan</button>
@@ -162,6 +162,7 @@
                     ndef.addEventListener("reading", ({ message, serialNumber }) => {
                         log(`> Serial Number: ${serialNumber}`);
 
+<<<<<<< HEAD
                         fetch('test.php', {
                             method: 'POST',
                             headers: {
@@ -191,6 +192,11 @@
         // To stop the await operation at a certain point
         function stopAwaitOperation() {
             isStopped = true;
+=======
+        function stopScan() {
+            scanning = false;
+            clearTimeout(scanTimeout);
+>>>>>>> parent of 064f0c5 (2)
         }
     </script>
 
