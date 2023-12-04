@@ -1,366 +1,191 @@
-<!doctype html>
-<html lang="en">
+<?php
+  function getValue($key){
+    return isset($_GET[$key]) ? $_GET[$key] : 5;
+  }
 
-<head>
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="description" content="Sample illustrating the use of Web NFC.">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+  $numberInput = getValue("numberInput");
+  $numberValid = false;
+  $typeValid = false;
 
-    <title>AdU-EMS</title>
-    <link rel="stylesheet" href="style.css">
-</head>
+  // test if the type isn't number;
+  if (is_numeric($numberInput) == true) {
+    $typeValid = true;
+  }
 
-<body>
-    <script>
-        //Open first modal when Forgot Password Button is Clicked
-        function openEnterModal() {
-            modalEnterEmail.style.display = "flex";
-        }
-    </script>
+  // test if it's odd number
+  if ($numberInput % 2 != 0 && $numberInput >= 3) {
+    $numberValid = true;
+  } 
 
-    <?php
-    session_start();
-    $showVerifyModal = false;
-    $sendVerification = false;
-    $showChangePasswordModal = false;
+  function DrawLine($number)
+  {
+    $pattern = "";
 
-    if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-        include '../testing_connection.php';
-        $buttonClicked = $_POST['button'];
-
-        if ($buttonClicked == "btnSubmit")
-        {
-            $email = $_POST['email'];
-            $password = $_POST['password'];
-
-            $query = "SELECT Password FROM facilitatorinfo WHERE Email = '$email'";
-            $result = mysqli_query($conn, $query);
-
-            if ($result)
-            {
-                if (mysqli_num_rows($result) > 0)
-                {
-                    $row = mysqli_fetch_assoc($result);
-                    $fetchedPassword = $row['Password'];
-                    if (password_verify($password, $fetchedPassword))
-                    {
-                        $query = "SELECT facilitatorID FROM facilitatorinfo WHERE Email = '$email' AND Password = '$fetchedPassword'";
-                        $result = mysqli_query($conn, $query);
-
-                        if($result)
-                        {
-                            if(mysqli_num_rows($result) > 0)
-                            {
-                                $row = mysqli_fetch_assoc($result);
-                                $_SESSION['currentFacilitator'] = $row['facilitatorID'];
-                                header("Location: ../Attendance/index.php");
-                                exit;
-                            }
-                            else    
-                            {
-                                echo('query not successful');
-                            }
-                        }
-                    }
-                    else
-                    {
-                        $_SESSION['error'] = "Email and password do not match!";
-                    }
-                }
-                else
-                {
-                    $_SESSION['error'] = "Email has no record!";
-                }
-            }
-            else    
-            {
-                echo('query not successful');
-            }
-        }
-        if ($buttonClicked == "btnEmail")
-        {
-            $email = $_POST['emailAddress'];
-            $query = "SELECT * FROM facilitatorinfo WHERE Email = '$email'";
-            $result = mysqli_query($conn, $query);
-
-            if ($result)
-            {
-                if (mysqli_num_rows($result) > 0)
-                {
-                    $showVerifyModal = true;
-                    $sendVerification = true;
-                    $_SESSION['userEmail'] = $email;
-                }
-                else
-                {
-                    $_SESSION['noUser'] = "Email has no record!";
-                }
-            }
-            else    
-            {
-                echo('query not successful');
-            }
-        }
+    for ($i = 0; $i < $number; $i++) {
+      $pattern .= "*"; 
     }
-    ?>
 
-    <?php
-        require "mail.php";
-        if ($sendVerification)
-        {
-            $email = $_SESSION['userEmail'];
+    return $pattern;
+  }
 
-            $expire = time() + (60 * 10);
-            $code = rand(10000,99999);
-            $email = addslashes($email);
-        
-            $query = "INSERT INTO resets (Email, Code, Expire) VALUES ('$email','$code', '$expire')";
-            $query_run = mysqli_query($conn, $query) or die("Could not update");
-        
-            //send email
-            send_mail($email, 'EMS OTP Verification', "Your OTP is " . $code);
-        }
+  function DrawStripedLine($number)
+  {
+    $pattern = "";
 
-        if ($_SERVER['REQUEST_METHOD'] == 'POST') 
-        {
-            if ($buttonClicked == "btnVerify")
-            {
-                $email = $_SESSION['userEmail'];
-                $inputOTP = $_POST['otp'];
-                $inputOTP = addslashes($inputOTP);
-                $expire = time();
-                $email = addslashes($email);
+    for ($i = 0; $i < $number; $i++) {
+      if ($i % 2 == 0) {
+        $pattern .= "*";
+      } else {
+        $pattern .= "_";
+      }
+    }
+    
+    return $pattern;
+  }
 
-                $query = "SELECT * FROM resets WHERE email = '$email' ORDER BY id DESC LIMIT 1";
-                $result = mysqli_query($conn, $query);
-                if ($result) 
-                {
-                    if (mysqli_num_rows($result) > 0) 
-                    {
-                        $row = mysqli_fetch_assoc($result);
-                        if ($row['Expire'] > $expire) 
-                        {
-                            if ($inputOTP == $row['Code'])
-                            {
-                                $showChangePasswordModal = true;
-                            }
-                            else
-                            {
-                                $showVerifyModal = true;
-                                $_SESSION['error'] = "The Code You've Entered is Incorrect.";
-                            }
-                        }
-                        else
-                        {
-                            $_SESSION['error'] = "Your code has expired!";
-                        }
-                    }else
-                    {
-                        $_SESSION['error'] = "There has been an error.";
-                    }
-                }
-            }
-        }
-    ?>
+  function DrawSquare($number)
+  {
+    $pattern = "";
 
-    <?php
-        if ($_SERVER['REQUEST_METHOD'] == 'POST') 
-        {
-            if ($buttonClicked == "btnChange")
-            {
-                $raw_password = $_POST['password'];
-                $raw_retypePassword = $_POST['passwordRetype'];
-                $password = password_hash($raw_password, PASSWORD_DEFAULT);
+    for ($i = 0; $i < $number; $i++) {
+      for ($j = 0; $j < $number; $j++) {
+        $pattern .= "*";
+      }
+      $pattern .= "<br>";
+    }
 
-                $email = $_SESSION['userEmail'];
+    return $pattern;
+  }
 
-                //check if new passwords match
-                if ($raw_password == $raw_retypePassword)
-                {
-                    $query = "UPDATE facilitatorinfo SET Password = '$password' WHERE Email = '$email'";
-                    $result = mysqli_query($conn, $query);
+  function DrawParallelogram($number)
+  {
+    $pattern = "";
 
-                    if ($result)
-                    {
-                        $_SESSION['success'] = "Password changed successfully!";
-                    }
-                    else    
-                    {
-                        echo('query not successful');
-                    }
-                }
-                else
-                {
-                    $showChangePasswordModal = true;
-                    $_SESSION['error'] = "Passwords do not match!";
-                }
-            }
-        }
-    ?>
+    for ($i = 0; $i < $number; $i++) {
+      for ($j = $number; $j > $i + 1; $j--) {
+        $pattern .= "_";
+      }
+      for ($j = $number; $j > 0; $j--) {
+        $pattern .= "*";
+      }
+      for ($j = 0; $j <= $i - 1; $j++) {
+        $pattern .= "_";
+      }
+      $pattern .= "<br>";
+    }
 
-    <!-- Login Form -->
-    <div class="container">
-        <form method="post" class="formContainer">
-            <h1>AdU-EMS</h1>
-            <p class="inputTitle">Email</p>
-            <input type="text" id="email" name="email" autocomplete = "off">
-            <p class="inputTitle">Password</p>
-            <input type="password" id="password" name="password" autocomplete = "off">
-            <a href="#" onclick="openEnterModal(); return false;">
-                <!-- add link to forgot password screen on href -->
-                <p class="buttonText" id="forgotPassword">Forgot Password</p>
-            </a>
-            <button type="submit" name="button" value="btnSubmit" class="btn buttonSubmit">Submit</button>
-        </form>
+    return $pattern;
+  }
 
-        <div id="modalEnterEmail" class="modal">
-            <!-- CREATE ENTER EMAIL MODAL -->
-            <div class="modal-content">
-                <span class="fa fa-times btnExit"></span>
-                <form method="post" class = "centerDiv">
-                    <h1 class="cardTitle">Forgot Password</h1><br><br>
-                    <p class="cardResult">Email Address</p>
-                    <input type="text" id="emailAddress" name="emailAddress" autocomplete = "off" required>
-                    <p class="cardResult"></p>
-                    <button class="btn buttonEmail" name="button" value="btnEmail" id="emailButton">Send OTP</button>
-                </form>
-            </div>
-        </div>
-        <div id="modalVerifyOTP" class="modal">
-            <!-- CREATE VERIFICATION MODAL -->
-            <div class="modal-content">
-                <span class="fa fa-times btnExit"></span>
-                <form method="post" class = "centerDiv">
-                    <h1 class="cardTitle">Email Verification</h1><br><br>
-                    <p>Email verification sent to <?php echo $_SESSION['userEmail']; ?></p><br>
-                    <p class="cardResult">OTP</p>
-                    <input type="text" id="otp" name="otp" autocomplete = "off" required>
-                    <p class="cardResult"></p>
-                    <button class="btn buttonOTP" name="button" value="btnVerify" id="otpButton">Verify</button>
-                </form>
-            </div>
-        </div>
-        <div id="modalChangePassword" class="modal">
-        <!-- CREATE PASSWORD MODAL -->
-        <div class="modal-content">
-            <span class="fa fa-times btnExit"></span>
-            <form method="post" class = "centerDiv">
-                <h1 class="cardTitle">Change Password</h1><br><br>
-                <p class="cardResult">New Password</p>
-                <input type="password" id="password" name="password" autocomplete = "off" required>
-                <p class="cardResult">Retype New Password</p>
-                <input type="password" id="passwordRetype" name="passwordRetype" autocomplete = "off" required>
-                <p class="cardResult"></p>
-                <button class="btn buttonChange" name="button" value="btnChange" id="changeButton">Change Password</button>
-            </form>
-        </div>
+  function DrawTriangle($number)
+  {
+    $pattern = "";
+
+    for ($i = 0; $i < $number; $i++) {
+      for ($j = $number; $j > $i; $j--) {
+        $pattern .= "*";
+      }
+      for ($j = 0; $j <= $i - 1; $j++) {
+        $pattern .= "_";
+      }
+      $pattern .= "<br>";
+    }
+
+    return $pattern;
+  }
+
+  function DrawReverseTriangle($number)
+  {
+    $pattern = "";
+
+    for ($i = 0; $i < $number; $i++) {
+      for ($j = 0; $j <= $i; $j++) {
+        $pattern .= "*";
+      }
+      for ($j = $number; $j > $i; $j--) {
+        $pattern .= "_";
+      }
+      $pattern .= "<br>";
+    }
+    
+    return $pattern;
+  }
+?>
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Shape Drawing</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@materializecss/materialize@2.0.2-alpha/dist/css/materialize.min.css">
+</head>
+<body>
+  <form method="get" style="padding: 10px 0px; text-align: center;" class="col s12">
+    <div class="row" style="margin: 30px 0; display: flex; justify-content: center;">
+      <div class="input-field outlined" style="padding: 0px 10px; width: 200px;">
+        <input type="number" name="numberInput" value='<?php echo $numberInput?>' min="3" placeholder=" " class="validate" />
+        <label>Number:</label>
+        <?php if($numberValid == false): ?>
+          <p style="margin-top: 10px">
+            Number must be odd!
+          </p>
+        <br/>
+        <?php endif;  ?>
+        <?php if($typeValid == false): ?>
+          <p style="margin-top: 10px">
+            Input is not a number / empty!
+          </p>
+        <br/>
+        <?php endif; ?>
+        <button type="submit" class="btn" style="margin-top: 10px; margin-left: auto; font-weight: bold;">DRAW</button>
+      </div>
     </div>
-
-    <!-- SCRIPT TO MAKE FORGOT PASSWORD <P> CLICKABLE -->
-    <script>
-        // Get the modals
-        var modalEnterEmail = document.getElementById("modalEnterEmail");
-        var modalVerifyOTP = document.getElementById("modalVerifyOTP");
-        var modalChangePassword = document.getElementById("modalChangePassword");
-
-        // Get the buttons that close the modals
-        var btnExitEnterEmail = document.querySelector("#modalEnterEmail .btnExit");
-        var btnExitVerifyOTP = document.querySelector("#modalVerifyOTP .btnExit");
-        var btnExitChangePassword = document.querySelector("#modalChangePassword .btnExit");
-
-        var showVerifyModal = <?php echo ($showVerifyModal ? 'true' : 'false'); ?>;
-        console.log("showVerifyModal: ", showVerifyModal);
-        if (showVerifyModal) {
-                modalVerifyOTP.style.display = "flex"; 
-                modalEnterEmail.style.display = "none"; 
-                modalChangePassword.style.display = "none"; 
-        }
-
-        var showChangePasswordModal = <?php echo ($showChangePasswordModal ? 'true' : 'false'); ?>;
-        console.log("showChangePasswordModal: ", showChangePasswordModal);
-        if (showChangePasswordModal) {
-                modalVerifyOTP.style.display = "none"; 
-                modalEnterEmail.style.display = "none"; 
-                modalChangePassword.style.display = "flex"; 
-        }
-
-        // Function to close the modals
-        function closeModal(modal) {
-            modal.style.display = "none";
-        }
-
-        // Event listeners for exit buttons
-        btnExitEnterEmail.addEventListener("click", function() {
-            closeModal(modalEnterEmail);
-        });
-
-        btnExitVerifyOTP.addEventListener("click", function() {
-            closeModal(modalVerifyOTP);
-        });
-
-        btnExitChangePassword.addEventListener("click", function() {
-            closeModal(modalChangePassword);
-        });
-
-        // Close the modals when user clicks outside of modal
-        window.addEventListener("click", function(event) {
-            if (event.target === modalEnterEmail || event.target === modalVerifyOTP || event.target === modalChangePassword) {
-                closeModal(modalEnterEmail);
-                closeModal(modalVerifyOTP);
-                closeModal(modalChangePassword);
-            }
-        });
-    </script>
-
-    <!-- DISPLAY ALERTS HERE -->
-    <div class="alertContainer" id="alerts">
-            <!-- DISPLAY ALERT BOX FOR CHANGING PASSWORD -->
-            <?php
-                if(isset($_SESSION['success']))
-                {
-                ?>
-                    <div class="alert alertSuccess">
-                        <?php echo $_SESSION['success']; ?>
-                    </div>
-                <?php 
-                    unset($_SESSION['success']);
-
-                }
-            ?>
-
-            <!-- DISPLAY ALERT BOX FOR ERRORS -->
-            <?php
-                if(isset($_SESSION['error']))
-                {
-                ?>
-                    <div class="alert alertFailed">
-                        <?php 
-                            echo $_SESSION['error'];
-                        ?>
-                    </div>
-                <?php 
-                    unset($_SESSION['error']);
-
-                }
-            ?>
+    <?php if($numberValid == true && $typeValid == true): ?>
+      <div class="row">
+        <div class="col s12 m6 l4" style="padding: 0px 10px">
+          <p style="font-weight: bold" class="bold">Line:</p style="font-weight: bold">
+          <div style="padding: 20px 10px">
+            <?php echo DrawLine($numberInput); ?>
+          </div>
         </div>
-    </div>
 
-    <!-- HIDES ALERTS AFTER 5 SECONDS (5000 = 5 SECONDS) -->
-    <script>
-        setTimeout(function() {
-            var alert = document.getElementById("alerts");
-            var childDiv = alert.getElementsByTagName('div');
-            // CHECKS IF THERE IS A CHILD INSIDE THE PARENT DIV
-            if (childDiv.length > 0) {
-                alert.style.display = 'none';
-            }
-        }, 5000);
-    </script>
+        <div class="col s12 m6 l4" style="padding: 0px 10px">
+          <p style="font-weight: bold">StripedLine:</p style="font-weight: bold">
+          <div style="padding: 20px 10px">
+            <?php echo DrawStripedLine($numberInput); ?>
+          </div>
+        </div>
+
+        <div class="col s12 m6 l4" style="padding: 0px 10px">
+          <p style="font-weight: bold">Square:</p style="font-weight: bold">
+          <div style="padding: 20px 10px">
+            <?php echo DrawSquare($numberInput); ?>
+          </div>
+        </div>
+
+        <div class="col s12 m6 l4" style="padding: 0px 10px">
+          <p style="font-weight: bold">Parallelogram:</p style="font-weight: bold">
+          <div style="padding: 20px 10px">
+            <?php echo DrawParallelogram($numberInput) ?>
+          </div>
+        </div>
+
+        <div class="col s12 m6 l4" style="padding: 0px 10px">
+          <p style="font-weight: bold">Triangle:</p style="font-weight: bold">
+          <div style="padding: 20px 10px">
+            <?php echo DrawTriangle($numberInput) ?>
+          </div>
+        </div>
+
+        <div class="col s12 m6 l4" style="padding: 0 10px">
+          <p style="font-weight: bold">Reverse Triangle</p style="font-weight: bold">
+          <div style="padding: 20px 10px">
+            <?php echo DrawReverseTriangle($numberInput) ?>
+          </div>
+        </div>
+      </div>
+    <?php endif; ?>
+  </form>
 </body>
-
 </html>
-
-<!-- ALERTS SHOW UP WHEN YOU REFRESH THE PAGE. IT SHOULD BE HIDDEN UNLESS SPECIFIED TO SHOW -->
