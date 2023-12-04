@@ -1,10 +1,10 @@
 {
   "functions": {
-    "EventManagementSystem/Login Page/*.php": {
+    "api/*.php": {
       "runtime": "vercel-php@0.6.0"
     }
   },
   "routes": [
-    { "src": "/(.*)",  "dest": "/EventManagementSystem/Login Page/index.php" }
+    { "src": "/(.*)",  "dest": "/api/index.php" }
   ]
 }
