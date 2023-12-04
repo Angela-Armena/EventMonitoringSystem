@@ -157,6 +157,7 @@
 
                 ndef.addEventListener("reading", ({ message, serialNumber }) => {
                     log(`> Serial Number: ${serialNumber}`);
+                    log('Check attendance on computer.\n');
 
                     fetch('test.php', {
                         method: 'POST',
