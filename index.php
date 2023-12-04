@@ -180,7 +180,7 @@
         function stopScan() {
             scanning = false;
             clearTimeout(scanTimeout);
-            ndef.cancel();
+            ndef.stop();
         }
     </script>
 
