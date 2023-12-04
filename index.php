@@ -27,7 +27,7 @@
     $showChangePasswordModal = false;
 
     if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-        include '../testing_connection.php';
+        include 'testing_connection.php';
         $buttonClicked = $_POST['button'];
 
         if ($buttonClicked == "btnSubmit")
