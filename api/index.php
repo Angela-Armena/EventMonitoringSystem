@@ -6,7 +6,7 @@
 </head>
 <style>
     body {
-    background-color: firebrick;
+    background-color: indianred;
     width: 100%;
     padding: 0;
     margin: 0;
@@ -57,6 +57,14 @@
     display: flex;
     justify-content: center;
     align-items: center;
+    }
+
+    select {
+    padding: 10px;
+    width: 100%;
+    margin-bottom: 12px;
+    border: 1px solid #A9A9A9;
+    border-radius: 0.3rem;
     }
 
     #scanButton {
