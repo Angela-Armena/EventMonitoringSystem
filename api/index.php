@@ -6,7 +6,7 @@
 </head>
 <style>
     body {
-    background-color: cyan;
+    background-color: coral;
     box-sizing: border-box;
     font-family: "Roboto", "Helvetica", "Arial", sans-serif;
     }
@@ -180,6 +180,8 @@
                     })
                     .catch(error => {
                         console.error('Error: ', error);
+                        abortController.abort();
+                        resetScanState(); // Reset state after abort
                     })
                     .finally(() => {
                         abortController.abort();
@@ -196,9 +198,6 @@
         const resetScanState = () => {
             scanning = false; // Reset scanning flag
             successfulRead = false; // Reset successful read flag
-            // Reset any other variables related to the scan process
-            // Enable the scan button if it was disabled during scanning
-            scanButton.disabled = false;
         };
     </script>
 
