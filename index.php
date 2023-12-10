@@ -133,24 +133,30 @@
 
         scanButton.addEventListener("click", async () => {
             if (scanning) return; // Prevent multiple scans
-            
+                    
             log("Scanning for ID...");
             scanning = true;
 
             try {
                 const abortController = new AbortController();
-                abortController.signal.onabort = event => {
+                abortController.signal.onabort = () => {
                     scanning = false;
-                    clearTimeout(scanTimeout);
                 };
 
                 const ndef = new NDEFReader();
-                scanTimeout = setTimeout(() => {
-                    if (scanning) {
-                        log("Nothing has been scanned. Please try again.");
-                        abortController.abort();
-                    }
-                }, 5000); // 5 seconds timeout
+                let successfulRead = false;
+
+                const startScanTimeout = () => {
+                    setTimeout(() => {
+                        if (scanning && !successfulRead) {
+                            log("Nothing has been scanned. Please try again.");
+                            ndef.cancel(); // Explicitly cancel ongoing NFC scan
+                            abortController.abort();
+                        }
+                    }, 5000); // 5 seconds timeout
+                };
+
+                startScanTimeout(); // Start initial timeout
 
                 await ndef.scan({ signal: abortController.signal });
                 log("> Scan started");
@@ -163,6 +169,7 @@
                 ndef.addEventListener("reading", ({ message, serialNumber }) => {
                     log(`> Serial Number: ${serialNumber}`);
                     log('Check attendance on computer.\n');
+                    successfulRead = true;
 
                     fetch('test.php', {
                         method: 'POST',
@@ -173,9 +180,10 @@
                     })
                     .catch(error => {
                         console.error('Error: ', error);
+                    })
+                    .finally(() => {
+                        abortController.abort();
                     });
-
-                    abortController.abort();
                 });
             } catch (error) {
                 log("Argh! " + error);
