@@ -6,9 +6,12 @@
 </head>
 <style>
     body {
-    background-color: crimson;
+    background-color: blueviolet;
     width: 100%;
-    overflow: hidden;
+    padding: 0;
+    margin: 0;
+    justify-content: center;
+    align-items: center;
     font-family: "Roboto", "Helvetica", "Arial", sans-serif;
     }
 
@@ -36,8 +39,6 @@
     width: 90%;
     margin: 0.5em;
     padding: 0.5em;
-    justify-content: center;
-    align-items: center;
     }
 
     #log {
@@ -54,15 +55,13 @@
     #scanButton {
     border: none;
     width: 12rem;
-    height: 1.5rem;
+    height: 5rem;
     border: 2px solid #36454F;
     padding: 0.75rem 1.5rem;
     border-radius: 1.5rem;
     font-size: 12px;
     font-size: 1.5rem;
     letter-spacing: 2px;
-    justify-content: center;
-    align-items: center;
     }
 </style>
 
