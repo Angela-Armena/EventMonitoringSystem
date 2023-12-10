@@ -39,7 +39,7 @@
     .output {
     background-color: #f0f0f0;
     border-radius: 0.75em;
-    display: block;
+    display: none;
     margin: 0.5em;
     padding: 0.5em;
     }
@@ -110,7 +110,6 @@
 
         <h2 id="status"></h2>
 
-        <h3>Live Output</h3>
         <div id="output" class="output">
             <pre id="log"></pre>
         </div>
@@ -134,11 +133,14 @@
 
         <!-- STARTS SCAN WHEN BUTTON IS CLICKED -->
         <script>
+            var output = document.getElementById("output");
             let scanning = false;
             let scanTimeout;
 
             scanButton.addEventListener("click", async () => {
                 if (scanning) return; // Prevent multiple scans
+
+                output.style.display = "block";
                         
                 clearLog();
                 log("Scanning for ID...");
