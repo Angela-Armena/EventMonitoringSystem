@@ -6,7 +6,7 @@
 </head>
 <style>
     body {
-    background-color: cadetblue;
+    background-color: darksalmon;
     width: 100%;
     padding: 0;
     margin: 0;
@@ -52,6 +52,12 @@
     display: none;
     }
 
+    .scanContainer {
+        width: 100%;
+        display: block;
+        justify-content: center;
+    }
+
     #scanButton {
     border: none;
     width: 12rem;
@@ -70,7 +76,7 @@
     <h1>EMS Attendance Scanner</h1>
     <br><br>
 
-    <button id="scanButton">Scan</button>
+    <div class="scanContainer"><button id="scanButton">Scan</button></div>
 
     <!-- DISPLAYS ERROR IF THE NFC ATTENDANCE SCANNER IS OPENED IN A COMPUTER AND NOT A PHONE -->
     <script>
