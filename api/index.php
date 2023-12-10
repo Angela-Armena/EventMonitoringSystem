@@ -158,8 +158,7 @@
                     const startScanTimeout = () => {
                         setTimeout(() => {
                             if (scanning && !successfulRead) {
-                                navigator.vibrate(1000);
-                                log("Nothing has been scanned. Please try again.\n");
+                                log("Nothing has been scanned. Please try again.");
                                 abortController.abort();
                                 resetScanState(); // Reset state after abort
                             }
@@ -171,14 +170,14 @@
                     await ndef.scan({ signal: abortController.signal });
 
                     ndef.addEventListener("readingerror", () => {
-                        log("Cannot read data from the NFC tag. Please try again.\n");
+                        log("Cannot read data from the NFC tag. Please try again.");
                         abortController.abort();
                         resetScanState(); // Reset state after abort
                     });
 
                     ndef.addEventListener("reading", ({ message, serialNumber }) => {
                         log('Scan successful!');
-                        log('Check attendance on computer.\n');
+                        log('Check attendance on computer.');
                         successfulRead = true;
 
                         fetch('test.php', {
