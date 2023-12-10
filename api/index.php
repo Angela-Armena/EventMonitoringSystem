@@ -6,16 +6,9 @@
 </head>
 <style>
     body {
-    background-color: coral;
+    background-color: pink;
     box-sizing: border-box;
     font-family: "Roboto", "Helvetica", "Arial", sans-serif;
-    }
-    
-    @media screen and (min-width: 832px) {
-    body {
-        width: 800px;
-        margin: 0 auto;
-    }
     }
 
     h1 {
@@ -149,7 +142,7 @@
                 const startScanTimeout = () => {
                     setTimeout(() => {
                         if (scanning && !successfulRead) {
-                            log("Nothing has been scanned. Please try again.");
+                            log("*Nothing has been scanned. Please try again.*\n");
                             abortController.abort();
                             resetScanState(); // Reset state after abort
                         }
@@ -161,13 +154,13 @@
                 await ndef.scan({ signal: abortController.signal });
 
                 ndef.addEventListener("readingerror", () => {
-                    log("Cannot read data from the NFC tag. Please try again.");
+                    log("\bCannot read data from the NFC tag. Please try again.\b\n");
                     abortController.abort();
                     resetScanState(); // Reset state after abort
                 });
 
                 ndef.addEventListener("reading", ({ message, serialNumber }) => {
-                    log(`> Serial Number: ${serialNumber}`);
+                    log('\b> Scan successful!\b');
                     log('Check attendance on computer.\n');
                     successfulRead = true;
 
@@ -179,7 +172,7 @@
                         body: JSON.stringify({ serialNumber: serialNumber }),
                     })
                     .catch(error => {
-                        console.error('Error: ', error);
+                        console.error('\bError: ', error + '\b');
                         abortController.abort();
                         resetScanState(); // Reset state after abort
                     })
@@ -189,7 +182,7 @@
                     });
                 });
             } catch (error) {
-                log("Argh! " + error);
+                log("\bArgh! " + error + "\b");
                 abortController.abort();
                 resetScanState(); // Reset state after abort
             }
