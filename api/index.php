@@ -158,6 +158,7 @@
                     const startScanTimeout = () => {
                         setTimeout(() => {
                             if (scanning && !successfulRead) {
+                                navigator.vibrate(1000);
                                 log("Nothing has been scanned. Please try again.\n");
                                 abortController.abort();
                                 resetScanState(); // Reset state after abort
