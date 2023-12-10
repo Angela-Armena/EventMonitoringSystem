@@ -6,13 +6,13 @@
 </head>
 <style>
     body {
-    background-color: lime;
+    background-color: aquamarine;
     font-family: "Roboto", "Helvetica", "Arial", sans-serif;
     }
 
     h1 {
     margin-bottom: -0.3em;
-    font-size: 1.5rem;
+    font-size: 10rem;
     }
 
     h2 {
