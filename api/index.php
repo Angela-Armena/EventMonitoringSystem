@@ -3,7 +3,6 @@
 
 <head>
     <title>EMS Attendance Scanner</title>
-    <link rel="stylesheet" href="attendance.css">
 </head>
 <style>
     body {
@@ -139,11 +138,17 @@
             scanning = true;
 
             try {
+                const abortController = new AbortController();
+                abortController.signal.onabort = event => {
+                    scanning = false;
+                    clearTimeout(scanTimeout);
+                };
+
                 const ndef = new NDEFReader();
                 scanTimeout = setTimeout(() => {
                     if (scanning) {
                         log("Nothing has been scanned. Please try again.");
-                        stopScan();
+                        abortController.abort();
                     }
                 }, 5000); // 5 seconds timeout
 
@@ -152,7 +157,7 @@
 
                 ndef.addEventListener("readingerror", () => {
                     log("Cannot read data from the NFC tag. Please try again.");
-                    stopScan();
+                    abortController.abort();
                 });
 
                 ndef.addEventListener("reading", ({ message, serialNumber }) => {
@@ -170,19 +175,13 @@
                         console.error('Error: ', error);
                     });
 
-                    stopScan();
+                    abortController.abort();
                 });
             } catch (error) {
                 log("Argh! " + error);
-                stopScan();
+                abortController.abort();
             }
         });
-
-        function stopScan() {
-            scanning = false;
-            clearTimeout(scanTimeout);
-            ndef.stop();
-        }
     </script>
 
     <?php
