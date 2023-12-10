@@ -6,10 +6,11 @@
 </head>
 <style>
     body {
-    background-color: blueviolet;
+    background-color: cadetblue;
     width: 100%;
     padding: 0;
     margin: 0;
+    display: block;
     justify-content: center;
     align-items: center;
     font-family: "Roboto", "Helvetica", "Arial", sans-serif;
@@ -36,7 +37,6 @@
     background-color: #f0f0f0;
     border-radius: 0.75em;
     display: block;
-    width: 90%;
     margin: 0.5em;
     padding: 0.5em;
     }
