@@ -7,9 +7,10 @@
 <style>
     body {
     background-color: ivory;
+    overflow: hidden;
     width: 100%;
     padding: 0;
-    margin: 5px;
+    margin: 2rem;
     display: block;
     justify-content: center;
     align-items: center;
@@ -95,14 +96,14 @@
                 document.querySelector('#log').textContent += line + '\n';
             },
 
-            clearLog: function () {
-                document.querySelector('#log').textContent = '';
-            },
-
             setStatus: function (status) {
                 document.querySelector('#status').textContent = status;
             }
         };
+
+        const clearLog = () => {
+            document.querySelector('#log').textContent = '';
+        }
     </script>
 
     <h2 id="status"></h2>
@@ -137,6 +138,7 @@
         scanButton.addEventListener("click", async () => {
             if (scanning) return; // Prevent multiple scans
                     
+            clearLog();
             log("Scanning for ID...");
             scanning = true;
 
