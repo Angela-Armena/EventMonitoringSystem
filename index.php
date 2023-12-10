@@ -152,7 +152,7 @@
                     }
                 }, 5000); // 5 seconds timeout
 
-                await ndef.scan();
+                await ndef.scan({ signal: abortController.signal });
                 log("> Scan started");
 
                 ndef.addEventListener("readingerror", () => {
