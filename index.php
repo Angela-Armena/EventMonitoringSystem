@@ -6,7 +6,7 @@
 </head>
 <style>
     body {
-    background-color: darkslategrey;
+    background-color: forestgreen;
     width: 100%;
     padding: 0;
     margin: 0;
@@ -53,8 +53,11 @@
     }
 
     .scanContainer {
-        width: 100%;
-        background-color: green;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: green;
     }
 
     #scanButton {
