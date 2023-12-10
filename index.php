@@ -6,7 +6,7 @@
 </head>
 <style>
     body {
-    background-color: green;
+    background-color: cyan;
     box-sizing: border-box;
     font-family: "Roboto", "Helvetica", "Arial", sans-serif;
     }
@@ -131,69 +131,67 @@
         let scanning = false;
         let scanTimeout;
 
-        const scanButton = document.querySelector("#scanButton");
+        scanButton.addEventListener("click", async () => {
+            if (scanning) return; // Prevent multiple scans
+                    
+            log("Scanning for ID...");
+            scanning = true;
 
-        const initializeScanButton = () => {
-            scanButton.addEventListener("click", async () => {
-                if (scanning) return; // Prevent multiple scans
-                        
-                log("Scanning for ID...");
-                scanning = true;
+            try {
+                const abortController = new AbortController();
+                abortController.signal.onabort = event => {
+                    // All NFC operations have been aborted.
+                };
 
-                try {
-                    const abortController = new AbortController();
-                    abortController.signal.onabort = event => {
-                        // All NFC operations have been aborted.
-                    };
+                const ndef = new NDEFReader();
+                let successfulRead = false;
 
-                    const ndef = new NDEFReader();
-                    let successfulRead = false;
-
-                    const startScanTimeout = () => {
-                        setTimeout(() => {
-                            if (scanning && !successfulRead) {
-                                log("Nothing has been scanned. Please try again.");
-                                abortController.abort();
-                                resetScanState(); // Reset state after abort
-                            }
-                        }, 5000); // 5 seconds timeout
-                    };
-
-                    startScanTimeout(); // Start initial timeout
-
-                    await ndef.scan({ signal: abortController.signal });
-
-                    ndef.addEventListener("readingerror", () => {
-                        log("Cannot read data from the NFC tag. Please try again.");
-                        abortController.abort();
-                    });
-
-                    ndef.addEventListener("reading", ({ message, serialNumber }) => {
-                        log(`> Serial Number: ${serialNumber}`);
-                        log('Check attendance on computer.\n');
-                        successfulRead = true;
-
-                        fetch('test.php', {
-                            method: 'POST',
-                            headers: {
-                                'Content-Type': 'application/json',
-                            },
-                            body: JSON.stringify({ serialNumber: serialNumber }),
-                        })
-                        .catch(error => {
-                            console.error('Error: ', error);
-                        })
-                        .finally(() => {
+                const startScanTimeout = () => {
+                    setTimeout(() => {
+                        if (scanning && !successfulRead) {
+                            log("Nothing has been scanned. Please try again.");
                             abortController.abort();
-                        });
-                    });
-                } catch (error) {
-                    log("Argh! " + error);
+                            resetScanState(); // Reset state after abort
+                        }
+                    }, 5000); // 5 seconds timeout
+                };
+
+                startScanTimeout(); // Start initial timeout
+
+                await ndef.scan({ signal: abortController.signal });
+
+                ndef.addEventListener("readingerror", () => {
+                    log("Cannot read data from the NFC tag. Please try again.");
                     abortController.abort();
-                }
-            });
-        }
-        initializeScanButton(); // Call this function to reinitialize the event listener after an abort
+                    resetScanState(); // Reset state after abort
+                });
+
+                ndef.addEventListener("reading", ({ message, serialNumber }) => {
+                    log(`> Serial Number: ${serialNumber}`);
+                    log('Check attendance on computer.\n');
+                    successfulRead = true;
+
+                    fetch('test.php', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({ serialNumber: serialNumber }),
+                    })
+                    .catch(error => {
+                        console.error('Error: ', error);
+                    })
+                    .finally(() => {
+                        abortController.abort();
+                        resetScanState(); // Reset state after abort
+                    });
+                });
+            } catch (error) {
+                log("Argh! " + error);
+                abortController.abort();
+                resetScanState(); // Reset state after abort
+            }
+        });
 
         const resetScanState = () => {
             scanning = false; // Reset scanning flag
