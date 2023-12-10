@@ -56,6 +56,8 @@
         width: 100%;
         display: block;
         justify-content: center;
+        align-items: center;
+        background-color: green;
     }
 
     #scanButton {
