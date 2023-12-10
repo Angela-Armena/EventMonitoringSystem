@@ -6,7 +6,7 @@
 </head>
 <style>
     body {
-    background-color: forestgreen;
+    background-color: firebrick;
     width: 100%;
     padding: 0;
     margin: 0;
@@ -57,7 +57,6 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    background-color: green;
     }
 
     #scanButton {
@@ -81,7 +80,29 @@
     <h1>EMS Attendance Scanner</h1>
     <br><br>
 
-    <div class="scanContainer"><button id="scanButton">Scan</button></div>
+    <div class="scanContainer">
+        <p>Event:</p>
+        <select name="event" id="event">
+            <!-- DISPLAY NO EVENT IF 0 WERE SELECTED AND POPULATE SELECT INPUT IF THERE ARE EVENTS SELECTED FROM THE DATABASE -->
+            <?php if (isset($noEventForToday)): ?>
+                <option value="">No event in your department for today...</option>
+            <?php else: ?>
+                <option value="">Choose an event...</option>
+                <?php mysqli_data_seek($result, 0); // Reset pointer to the beginning ?>
+                <?php while ($event = mysqli_fetch_assoc($result)): ?>
+                    <option value="<?= htmlspecialchars($event['EventID']) ?>">
+                        <?= htmlspecialchars($event['Title']) ?>
+                    </option>
+                <?php endwhile ?>
+            <?php endif; ?>
+            <!-- CHECK IN CONSOLE HOW MANY EVENTS WERE SELECTED IN THE DATABASE -->
+            <script>
+                console.log("<?php echo "Number of rows: $row_count"; ?>");
+            </script>
+        </select>
+
+        <button id="scanButton">Scan</button>
+    </div>
 
     <!-- DISPLAYS ERROR IF THE NFC ATTENDANCE SCANNER IS OPENED IN A COMPUTER AND NOT A PHONE -->
     <script>
@@ -216,6 +237,25 @@
     // Check connection
     if ($conn -> connect_error) {
         die("Connection failed: " . $conn->connect_error);
+    }
+
+    $currentDate = date("Y-m-d");
+
+    $query = "SELECT EventID, Title FROM eventinfo";
+    //AND DateEvent = '$currentDate'
+    $result = mysqli_query($conn, $query);
+
+    $row_count = mysqli_num_rows($result);
+    
+    if (mysqli_num_rows($result) > 0)
+    {
+        $events = mysqli_fetch_assoc($result);
+        $eventID = $events['EventID'];
+        $eventTitle = $events['Title'];    
+    }   
+    else
+    {
+        $noEventForToday = true;
     }
 
     // Check if a serial number was received from the frontend
