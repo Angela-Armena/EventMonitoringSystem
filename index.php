@@ -9,7 +9,7 @@
     background-color: ivory;
     width: 100%;
     padding: 0;
-    margin: 0;
+    margin: 5px;
     display: block;
     justify-content: center;
     align-items: center;
@@ -137,7 +137,6 @@
         scanButton.addEventListener("click", async () => {
             if (scanning) return; // Prevent multiple scans
                     
-            clearLog();
             log("Scanning for ID...");
             scanning = true;
 
