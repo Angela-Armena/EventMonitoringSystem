@@ -6,8 +6,7 @@
 </head>
 <style>
     body {
-    background-color: pink;
-    box-sizing: border-box;
+    background-color: red;
     font-family: "Roboto", "Helvetica", "Arial", sans-serif;
     }
 
@@ -23,17 +22,7 @@
     margin-bottom: -0.2em;
     margin-top: 2em;
     }
-
-    .pageIcon {
-    height: 2.3em;
-    float: left;
-    margin-right: 0.5em;
-    }
-
-    .availability {
-    margin-bottom: 2em;
-    }
-
+    
     .output {
     background-color: #f0f0f0;
     border-radius: 0.75em;
@@ -48,22 +37,8 @@
     }
 
     #status:empty,
-    #log:empty,
-    #content:empty {
+    #log:empty {
     display: none;
-    }
-
-    .highlight {
-    border-radius: 0.75em;
-    border: 1px solid #f0f0f0;
-    display: block;
-    margin: 0.5em;
-    overflow-x: auto;
-    padding: 0.5em;
-    }
-
-    code {
-    font-family: Inconsolata, Consolas, monospace;
     }
 </style>
 
@@ -142,7 +117,7 @@
                 const startScanTimeout = () => {
                     setTimeout(() => {
                         if (scanning && !successfulRead) {
-                            log("*Nothing has been scanned. Please try again.*\n");
+                            log("<b>Nothing has been scanned. Please try again.</b>\n");
                             abortController.abort();
                             resetScanState(); // Reset state after abort
                         }
@@ -154,13 +129,13 @@
                 await ndef.scan({ signal: abortController.signal });
 
                 ndef.addEventListener("readingerror", () => {
-                    log("\bCannot read data from the NFC tag. Please try again.\b\n");
+                    log("<b>Cannot read data from the NFC tag. Please try again.</b>\n");
                     abortController.abort();
                     resetScanState(); // Reset state after abort
                 });
 
                 ndef.addEventListener("reading", ({ message, serialNumber }) => {
-                    log('\b> Scan successful!\b');
+                    log('<b> Scan successful!</b>');
                     log('Check attendance on computer.\n');
                     successfulRead = true;
 
@@ -172,7 +147,7 @@
                         body: JSON.stringify({ serialNumber: serialNumber }),
                     })
                     .catch(error => {
-                        console.error('\bError: ', error + '\b');
+                        console.error('<b>Error: ', error + '</b>');
                         abortController.abort();
                         resetScanState(); // Reset state after abort
                     })
@@ -182,7 +157,7 @@
                     });
                 });
             } catch (error) {
-                log("\bArgh! " + error + "\b");
+                log("<b>Argh! " + error + "</b>");
                 abortController.abort();
                 resetScanState(); // Reset state after abort
             }
