@@ -6,7 +6,7 @@
 </head>
 <style>
     body {
-    background-color: red;
+    background-color: cyan;
     box-sizing: border-box;
     font-family: "Roboto", "Helvetica", "Arial", sans-serif;
     }
@@ -80,7 +80,6 @@
     <br><br>
 
     <button id="scanButton">Scan</button>
-    <button id="abortButton">Abort</button>
 
     <!-- DISPLAYS ERROR IF THE NFC ATTENDANCE SCANNER IS OPENED IN A COMPUTER AND NOT A PHONE -->
     <script>
@@ -141,11 +140,7 @@
             try {
                 const abortController = new AbortController();
                 abortController.signal.onabort = event => {
-                // All NFC operations have been aborted.
-                };
-
-                document.querySelector("#abortButton").onclick = event => {
-                abortController.abort();
+                    // All NFC operations have been aborted.
                 };
 
                 const ndef = new NDEFReader();
@@ -155,7 +150,6 @@
                     setTimeout(() => {
                         if (scanning && !successfulRead) {
                             log("Nothing has been scanned. Please try again.");
-                            ndef.cancel(); // Explicitly cancel ongoing NFC scan
                             abortController.abort();
                         }
                     }, 5000); // 5 seconds timeout
@@ -164,7 +158,6 @@
                 startScanTimeout(); // Start initial timeout
 
                 await ndef.scan({ signal: abortController.signal });
-                log("> Scan started");
 
                 ndef.addEventListener("readingerror", () => {
                     log("Cannot read data from the NFC tag. Please try again.");
