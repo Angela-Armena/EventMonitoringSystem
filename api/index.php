@@ -6,13 +6,15 @@
 </head>
 <style>
     body {
-    background-color: cornflowerblue;
+    background-color: burlywood;
+    width: 100%;
     font-family: "Roboto", "Helvetica", "Arial", sans-serif;
     }
 
     h1 {
     margin-bottom: -0.3em;
     font-size: 3rem;
+    text-align: center;
     }
 
     h2 {
@@ -23,7 +25,7 @@
     h3 {
     margin-bottom: -0.2em;
     margin-top: 2em;
-    font-size: 2.5rem;
+    font-size: 2.75rem;
     }
     
     .output {
@@ -43,6 +45,19 @@
     #status:empty,
     #log:empty {
     display: none;
+    }
+
+    #scanButton {
+        border: none;
+        width: 12rem;
+        border: 2px solid #36454F;
+        padding: 0.75rem 1.5rem;
+        border-radius: 1.5rem;
+        font-size: 12px;
+        font-size: 0.8rem;
+        letter-spacing: 2px;
+        cursor: pointer;
+        transition: all .3s ease;
     }
 </style>
 
