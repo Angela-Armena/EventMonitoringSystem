@@ -6,7 +6,7 @@
 </head>
 <style>
     body {
-    background-color: #ffffff;
+    background-color: red;
     box-sizing: border-box;
     font-family: "Roboto", "Helvetica", "Arial", sans-serif;
     }
@@ -80,6 +80,7 @@
     <br><br>
 
     <button id="scanButton">Scan</button>
+    <button id="abortButton">Abort</button>
 
     <!-- DISPLAYS ERROR IF THE NFC ATTENDANCE SCANNER IS OPENED IN A COMPUTER AND NOT A PHONE -->
     <script>
@@ -139,8 +140,12 @@
 
             try {
                 const abortController = new AbortController();
-                abortController.signal.onabort = () => {
-                    scanning = false;
+                abortController.signal.onabort = event => {
+                // All NFC operations have been aborted.
+                };
+
+                document.querySelector("#abortButton").onclick = event => {
+                abortController.abort();
                 };
 
                 const ndef = new NDEFReader();
