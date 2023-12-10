@@ -6,24 +6,24 @@
 </head>
 <style>
     body {
-    background-color: aquamarine;
+    background-color: cornflowerblue;
     font-family: "Roboto", "Helvetica", "Arial", sans-serif;
     }
 
     h1 {
     margin-bottom: -0.3em;
-    font-size: 10rem;
+    font-size: 3rem;
     }
 
     h2 {
     margin-top: 2em;
-    font-size: 1.25rem;
+    font-size: 2.75rem;
     }
 
     h3 {
     margin-bottom: -0.2em;
     margin-top: 2em;
-    font-size: 1rem;
+    font-size: 2.5rem;
     }
     
     .output {
@@ -37,7 +37,7 @@
     #log {
     margin: .5em 0;
     white-space: pre-wrap;
-    font-size: 0.75rem;
+    font-size: 2rem;
     }
 
     #status:empty,
